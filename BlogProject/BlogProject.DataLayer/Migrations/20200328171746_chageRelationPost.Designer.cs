@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlogProject.DataLayer.Migrations
 {
     [DbContext(typeof(BlogProjectContext))]
-    [Migration("20200328135848_InitialDB")]
-    partial class InitialDB
+    [Migration("20200328171746_chageRelationPost")]
+    partial class chageRelationPost
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,6 +20,80 @@ namespace BlogProject.DataLayer.Migrations
                 .HasAnnotation("ProductVersion", "3.1.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("BlogProject.DataLayer.Entities.Post.Post", b =>
+                {
+                    b.Property<int>("PostID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ImageName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PostText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PostTitle")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(400)")
+                        .HasMaxLength(400);
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PostID");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Posts");
+                });
+
+            modelBuilder.Entity("BlogProject.DataLayer.Entities.Post.PostGroup", b =>
+                {
+                    b.Property<int>("GroupID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("GroupTitle")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
+
+                    b.HasKey("GroupID");
+
+                    b.ToTable("PostGroup");
+                });
+
+            modelBuilder.Entity("BlogProject.DataLayer.Entities.Post.PostToPostGroup", b =>
+                {
+                    b.Property<int>("PPG_Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("GroupID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PostGroupGroupID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PostId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PPG_Id");
+
+                    b.HasIndex("PostGroupGroupID");
+
+                    b.HasIndex("PostId");
+
+                    b.ToTable("PostToPostGroup");
+                });
 
             modelBuilder.Entity("BlogProject.DataLayer.Entities.User.Role", b =>
                 {
@@ -112,6 +186,28 @@ namespace BlogProject.DataLayer.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserRoles");
+                });
+
+            modelBuilder.Entity("BlogProject.DataLayer.Entities.Post.Post", b =>
+                {
+                    b.HasOne("BlogProject.DataLayer.Entities.User.User", "User")
+                        .WithMany("Post")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("BlogProject.DataLayer.Entities.Post.PostToPostGroup", b =>
+                {
+                    b.HasOne("BlogProject.DataLayer.Entities.Post.PostGroup", "PostGroup")
+                        .WithMany("PostToPostGroup")
+                        .HasForeignKey("PostGroupGroupID");
+
+                    b.HasOne("BlogProject.DataLayer.Entities.Post.Post", "Post")
+                        .WithMany("PostToPostGroup")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BlogProject.DataLayer.Entities.User.UserToRole", b =>

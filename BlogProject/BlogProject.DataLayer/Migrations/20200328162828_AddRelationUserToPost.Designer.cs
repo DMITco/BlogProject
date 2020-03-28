@@ -4,14 +4,16 @@ using BlogProject.DataLayer.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BlogProject.DataLayer.Migrations
 {
     [DbContext(typeof(BlogProjectContext))]
-    partial class BlogProjectContextModelSnapshot : ModelSnapshot
+    [Migration("20200328162828_AddRelationUserToPost")]
+    partial class AddRelationUserToPost
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,8 +31,14 @@ namespace BlogProject.DataLayer.Migrations
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("GroupID")
+                        .HasColumnType("int");
+
                     b.Property<string>("ImageName")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("PostGroupGroupID")
+                        .HasColumnType("int");
 
                     b.Property<string>("PostText")
                         .IsRequired()
@@ -45,6 +53,8 @@ namespace BlogProject.DataLayer.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("PostID");
+
+                    b.HasIndex("PostGroupGroupID");
 
                     b.HasIndex("UserId");
 
@@ -66,31 +76,6 @@ namespace BlogProject.DataLayer.Migrations
                     b.HasKey("GroupID");
 
                     b.ToTable("PostGroup");
-                });
-
-            modelBuilder.Entity("BlogProject.DataLayer.Entities.Post.PostToPostGroup", b =>
-                {
-                    b.Property<int>("PPG_Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("GroupID")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("PostGroupGroupID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PostId")
-                        .HasColumnType("int");
-
-                    b.HasKey("PPG_Id");
-
-                    b.HasIndex("PostGroupGroupID");
-
-                    b.HasIndex("PostId");
-
-                    b.ToTable("PostToPostGroup");
                 });
 
             modelBuilder.Entity("BlogProject.DataLayer.Entities.User.Role", b =>
@@ -188,22 +173,13 @@ namespace BlogProject.DataLayer.Migrations
 
             modelBuilder.Entity("BlogProject.DataLayer.Entities.Post.Post", b =>
                 {
+                    b.HasOne("BlogProject.DataLayer.Entities.Post.PostGroup", "PostGroup")
+                        .WithMany("Post")
+                        .HasForeignKey("PostGroupGroupID");
+
                     b.HasOne("BlogProject.DataLayer.Entities.User.User", "User")
                         .WithMany("Post")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("BlogProject.DataLayer.Entities.Post.PostToPostGroup", b =>
-                {
-                    b.HasOne("BlogProject.DataLayer.Entities.Post.PostGroup", "PostGroup")
-                        .WithMany("PostToPostGroup")
-                        .HasForeignKey("PostGroupGroupID");
-
-                    b.HasOne("BlogProject.DataLayer.Entities.Post.Post", "Post")
-                        .WithMany("PostToPostGroup")
-                        .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

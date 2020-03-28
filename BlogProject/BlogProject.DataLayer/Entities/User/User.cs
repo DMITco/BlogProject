@@ -68,6 +68,7 @@ namespace BlogProject.DataLayer.Entities.User
 
         #region Relations
         public virtual List<UserToRole> UserToRole { get; set; }
+        public virtual List<Post.Post> Post { get; set; }
         #endregion
     }
 }
