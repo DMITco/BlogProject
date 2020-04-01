@@ -16,14 +16,16 @@ namespace BlogProject.DataLayer.Context
 
 
         #region User
-        public DbSet<Role> Roles { get; set; }
-        public DbSet<User> Users { get; set; }
-        public DbSet<UserToRole> UserRoles { get; set; }
+        public virtual DbSet<Role> Roles { get; set; }
+        public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<UserToRole> UserRoles { get; set; }
         #endregion
 
         #region Post
-        public DbSet<Post> Posts { get; set; }
-        public DbSet<PostGroup> PostGroup { get; set; }
+        public virtual DbSet<Post> Posts { get; set; }
+        public virtual DbSet<PostGroup> PostGroup { get; set; }
+        public virtual DbSet<PostToPostGroup> PostToPostGroup { get; set; }
         #endregion
+
     }
 }

@@ -9,8 +9,8 @@ namespace BlogProject.DataLayer.Entities.User
     {
         public Role()
         {
+            UserToRoles = new HashSet<UserToRole>();
         }
-
         [Key]
         public int RoleId { get; set; }
 
@@ -22,8 +22,7 @@ namespace BlogProject.DataLayer.Entities.User
 
 
         #region Relations
-        public virtual List<UserToRole> UserToRole { get; set; }
-
+        public virtual ICollection<UserToRole> UserToRoles { get; set; }
         #endregion
     }
 }

@@ -9,18 +9,17 @@ namespace BlogProject.DataLayer.Entities.Post
     {
         public PostGroup()
         {
-
+            PostToPostGroup = new HashSet<PostToPostGroup>();
         }
 
         [Key]
-        public int GroupID { get; set; }
+        public int GroupId { get; set; }
 
         [Display(Name = "عنوان گروه")]
         [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
         [MaxLength(200)]
         public string GroupTitle { get; set; }
 
-
-        public virtual List<PostToPostGroup> PostToPostGroup { get; set; }
+        public virtual ICollection<PostToPostGroup> PostToPostGroup { get; set; }
     }
 }

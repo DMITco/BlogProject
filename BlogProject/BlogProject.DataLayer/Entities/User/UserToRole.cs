@@ -14,14 +14,16 @@ namespace BlogProject.DataLayer.Entities.User
         [Key]
         public int UR_Id { get; set; }
         public int UserId { get; set; }
-        public int RoleMan { get; set; }
+        public int RoleId { get; set; }
+        public bool IsActive { get; set; }
 
 
 
         #region Relations
 
-        public virtual User User { get; set; }
         public virtual Role Role { get; set; }
+        public virtual User User { get; set; }
+        
 
 
         #endregion

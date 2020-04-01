@@ -9,13 +9,14 @@ namespace BlogProject.DataLayer.Entities.User
     {
         public User()
         {
+            Posts = new HashSet<Post.Post>();
+            UserToRoles = new HashSet<UserToRole>();
         }
 
         [Key]
         public int UserId { get; set; }
 
         [Display(Name = "نام کاربری")]
-
         [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
         [MaxLength(200, ErrorMessage = "{0} نمیتواند بیشتر از بلاک {1} باشد")]
         public string UserName { get; set; }
@@ -67,8 +68,8 @@ namespace BlogProject.DataLayer.Entities.User
 
 
         #region Relations
-        public virtual List<UserToRole> UserToRole { get; set; }
-        public virtual List<Post.Post> Post { get; set; }
+        public virtual ICollection<Post.Post> Posts { get; set; }
+        public virtual ICollection<UserToRole> UserToRoles { get; set; }
         #endregion
     }
 }

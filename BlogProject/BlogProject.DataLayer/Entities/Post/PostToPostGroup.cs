@@ -7,21 +7,18 @@ namespace BlogProject.DataLayer.Entities.Post
 {
     public class PostToPostGroup
     {
-        public PostToPostGroup()
-        {
-        }
 
         [Key]
-        public int PPG_Id { get; set; }
+        public int PPGId { get; set; }
         public int PostId { get; set; }
         public int GroupID { get; set; }
 
 
 
         #region Relations
-
+        public virtual PostGroup Group { get; set; }
         public virtual Post Post { get; set; }
-        public virtual PostGroup PostGroup { get; set; }
+
 
 
         #endregion

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -17,6 +18,18 @@ namespace BlogProject.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            services.AddHttpClient("BlogClient", client =>
+            {
+                client.BaseAddress = new Uri("https://localhost:5001");
+
+            });
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+               .AddCookie(options =>
+               {
+                   options.LoginPath = "/Auth/Login";
+                   options.LogoutPath = "/Auth/SignOut";
+                   options.Cookie.Name = "Auth.Coo";
+               });
 
         }
 
@@ -30,7 +43,8 @@ namespace BlogProject.Web
 
             app.UseStaticFiles();
             app.UseRouting();
-
+            app.UseCookiePolicy();
+            app.UseAuthentication();
             app.UseEndpoints(endpoints =>
             {
                 //endpoints.MapControllers();

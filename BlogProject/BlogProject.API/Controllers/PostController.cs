@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
-using BlogProject.API.Services.interfaces;
+using BlogProject.Core.Services.Interfaces;
 using BlogProject.DataLayer.Entities.Post;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -30,12 +31,12 @@ namespace BlogProject.API.Controllers
                 {
                     return Ok(Posts);
                 }
-                return NoContent();
+                 return NotFound(new { message = "هنوز پستی درج نشده است" });
             }
             catch (Exception ex)
             {
 
-                return Problem(ex.Message);
+                 return new JsonResult(new { message = ex.Message }) { StatusCode = (int)HttpStatusCode.InternalServerError };
             }
         }
 
@@ -52,13 +53,13 @@ namespace BlogProject.API.Controllers
                 }
                 else
                 {
-                    return NoContent();
+                     return NotFound(new { message = "پستی با این شناسه پیدا نشد" });
                 }
             }
             catch (Exception ex)
             {
 
-                return Problem(ex.Message);
+                 return new JsonResult(new { message = ex.Message }) { StatusCode = (int)HttpStatusCode.InternalServerError };
             }
 
         }
@@ -74,12 +75,12 @@ namespace BlogProject.API.Controllers
                 }
 
                 await _postRepository.Add(Post);
-                return CreatedAtAction(nameof(GetPost), new { id = Post.PostID }, Post);
+                return CreatedAtAction(nameof(GetPost), new { id = Post.PostId }, Post);
             }
             catch (Exception ex)
             {
 
-                return Problem(ex.Message);
+                 return new JsonResult(new { message = ex.Message }) { StatusCode = (int)HttpStatusCode.InternalServerError };
             }
 
 
@@ -96,7 +97,7 @@ namespace BlogProject.API.Controllers
             catch (Exception ex)
             {
 
-                return Problem(ex.Message);
+                 return new JsonResult(new { message = ex.Message }) { StatusCode = (int)HttpStatusCode.InternalServerError };
             }
 
         }
@@ -112,7 +113,7 @@ namespace BlogProject.API.Controllers
             catch (Exception ex)
             {
 
-                return Problem(ex.Message);
+                 return new JsonResult(new { message = ex.Message }) { StatusCode = (int)HttpStatusCode.InternalServerError };
             }
 
         }

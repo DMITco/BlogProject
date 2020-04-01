@@ -9,13 +9,13 @@ namespace BlogProject.DataLayer.Entities.Post
     {
         public Post()
         {
+            PostToPostGroup = new HashSet<PostToPostGroup>();
         }
 
         [Key]
-        public int PostID { get; set; }
+        public int PostId { get; set; }
 
-        [Display(Name = "نویسنده")]
-        public int UserId { get; set; }
+
 
         [Display(Name = "عنوان پست")]
         [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
@@ -38,10 +38,11 @@ namespace BlogProject.DataLayer.Entities.Post
 
         [Display(Name = "تاریخ")]
         public DateTime CreateDate { get; set; }
+        [Display(Name = "نویسنده")]
+        public int UserCreateId { get; set; }
 
+        public virtual User.User UserCreate { get; set; }
+        public virtual ICollection<PostToPostGroup> PostToPostGroup { get; set; }
 
-
-        public virtual List<PostToPostGroup> PostToPostGroup { get; set; }
-        public virtual User.User User { get; set; }
     }
 }
