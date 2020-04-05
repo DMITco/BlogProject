@@ -15,6 +15,7 @@ namespace BlogProject.Web.Controllers
 {
     public class AuthController : Controller
     {
+
         private IHttpClientFactory _httpClientFactory;
 
         public AuthController(IHttpClientFactory httpClientFactory)

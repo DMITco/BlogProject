@@ -7,6 +7,6 @@ namespace BlogProject.Core.Configuration
 {
     public class AppSettings
     {
-        public string Secret { get; set; }
+        public string Secret { get; set; } = "This is the secret key and its very important";
     }
 }
