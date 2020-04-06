@@ -55,7 +55,7 @@ namespace BlogProject.Core.Services
             return _context.Users.SingleOrDefaultAsync(u => u.UserName == login.UserName && u.Password == login.Password);
         }
 
-        public async Task<IEnumerable<User>> GetUsers(int PageNumber = 1, int PageSize = 20)
+        public async Task<IEnumerable<User>> GetUsers(int PageNumber, int PageSize)
         {
             int skip = (PageNumber - 1) * PageSize;
             return await _context.Users.OrderBy(u => u.Family).Skip(skip).Take(PageSize).ToListAsync();

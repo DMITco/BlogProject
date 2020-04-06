@@ -27,11 +27,11 @@ namespace BlogProject.API.Controllers
         /// </summary>
         /// <returns>Users</returns>
         [HttpGet]
-        public async Task<IActionResult> GetUsers(int? PageNumber = 1, int? PageSize = 20)
+        public async Task<IActionResult> GetUsers()
         {
             try
             {
-                var Users = await _userRepository.GetUsers(PageNumber.Value, PageSize.Value);
+                var Users = await _userRepository.GetUsers();
                 if (Users.Any())
                 {
                     return Ok(Users);
@@ -44,7 +44,24 @@ namespace BlogProject.API.Controllers
                 return new JsonResult(new { message = ex.Message }) { StatusCode = (int)HttpStatusCode.InternalServerError };
             }
         }
+        [HttpGet("{PageNumber:int}/{PageSize:int}")]
+        public async Task<IActionResult> GetUsers(int PageNumber, int PageSize )
+        {
+            try
+            {
+                var Users = await _userRepository.GetUsers(PageNumber, PageSize);
+                if (Users.Any())
+                {
+                    return Ok(Users);
+                }
 
+                return NotFound(new { message = "هیچ کاربری پیدا نشد" });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { message = ex.Message }) { StatusCode = (int)HttpStatusCode.InternalServerError };
+            }
+        }
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetUser([FromRoute] int id)
         {

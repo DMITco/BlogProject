@@ -39,9 +39,10 @@ namespace BlogProject.Core.Services
             return await _context.Posts.SingleOrDefaultAsync(u => u.PostId == id);
         }
 
-        public async Task<IEnumerable<Post>> GetPosts()
+        public async Task<IEnumerable<Post>> GetPosts(int PageNumber, int PageSize)
         {
-            return await _context.Posts.ToListAsync();
+            int skip = (PageNumber - 1) * PageSize;
+            return await _context.Posts.OrderBy(u => u.CreateDate).Skip(skip).Take(PageSize).ToListAsync();
         }
 
         public async Task<bool> IsExists(int id)

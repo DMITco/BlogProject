@@ -40,6 +40,24 @@ namespace BlogProject.API.Controllers
                 return new JsonResult(new { message = ex.Message }) { StatusCode = (int)HttpStatusCode.InternalServerError };
             }
         }
+        [HttpGet("{PageNumber:int}/{PageSize:int}")]
+        public async Task<IActionResult> GetPost(int PageNumber, int PageSize)
+        {
+            try
+            {
+                var Posts = await _postRepository.GetPosts(PageNumber, PageSize);
+                if (Posts.Any())
+                {
+                    return Ok(Posts);
+                }
+                return NotFound(new { message = "هنوز پستی درج نشده است" });
+            }
+            catch (Exception ex)
+            {
+
+                return new JsonResult(new { message = ex.Message }) { StatusCode = (int)HttpStatusCode.InternalServerError };
+            }
+        }
 
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetPost([FromRoute] int id)
