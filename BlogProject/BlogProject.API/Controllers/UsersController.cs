@@ -104,7 +104,7 @@ namespace BlogProject.API.Controllers
         {
             try
             {
-                if (id != User.UserId)
+                if (User ==null || id != User.UserId)
                 {
                     return BadRequest(ErrorHandeling.MessageBadRequest("شناسه ارسالی با شناسه کاربر یکی نیست"));
                 }
