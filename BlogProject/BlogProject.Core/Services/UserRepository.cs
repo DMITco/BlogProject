@@ -22,7 +22,7 @@ namespace BlogProject.Core.Services
 
         public async Task<User> Add(User user)
         {
-            var USER = await _context.Users.AddAsync(user);
+            await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
             return user;
         }
@@ -55,9 +55,10 @@ namespace BlogProject.Core.Services
             return _context.Users.SingleOrDefaultAsync(u => u.UserName == login.UserName && u.Password == login.Password);
         }
 
-        public async Task<IEnumerable<User>> GetUsers()
+        public async Task<IEnumerable<User>> GetUsers(int PageNumber = 1, int PageSize = 20)
         {
-            return await _context.Users.ToListAsync();
+            int skip = (PageNumber - 1) * PageSize;
+            return await _context.Users.OrderBy(u => u.Family).Skip(skip).Take(PageSize).ToListAsync();
         }
 
         public async Task<bool> IsExists(int id)

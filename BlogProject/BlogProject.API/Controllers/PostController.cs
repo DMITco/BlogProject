@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using BlogProject.Core.Services.Interfaces;
+using BlogProject.Core.Utilities;
 using BlogProject.DataLayer.Entities.Post;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,25 +23,25 @@ namespace BlogProject.API.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetPost()
+        public async Task<IActionResult> GetPost()
         {
             try
             {
-                var Posts = _postRepository.GetPosts();
+                var Posts = await _postRepository.GetPosts();
                 if (Posts.Any())
                 {
                     return Ok(Posts);
                 }
-                 return NotFound(new { message = "هنوز پستی درج نشده است" });
+                return NotFound(new { message = "هنوز پستی درج نشده است" });
             }
             catch (Exception ex)
             {
 
-                 return new JsonResult(new { message = ex.Message }) { StatusCode = (int)HttpStatusCode.InternalServerError };
+                return new JsonResult(new { message = ex.Message }) { StatusCode = (int)HttpStatusCode.InternalServerError };
             }
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> GetPost([FromRoute] int id)
         {
             try
@@ -53,13 +54,13 @@ namespace BlogProject.API.Controllers
                 }
                 else
                 {
-                     return NotFound(new { message = "پستی با این شناسه پیدا نشد" });
+                    return NotFound(new { message = "پستی با این شناسه پیدا نشد" });
                 }
             }
             catch (Exception ex)
             {
 
-                 return new JsonResult(new { message = ex.Message }) { StatusCode = (int)HttpStatusCode.InternalServerError };
+                return new JsonResult(new { message = ex.Message }) { StatusCode = (int)HttpStatusCode.InternalServerError };
             }
 
         }
@@ -71,7 +72,7 @@ namespace BlogProject.API.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    return BadRequest(ModelState);
+                    return BadRequest(new { message = ErrorHandeling.MessageBadRequest(ModelState) });
                 }
 
                 await _postRepository.Add(Post);
@@ -80,40 +81,48 @@ namespace BlogProject.API.Controllers
             catch (Exception ex)
             {
 
-                 return new JsonResult(new { message = ex.Message }) { StatusCode = (int)HttpStatusCode.InternalServerError };
+                return new JsonResult(new { message = ex.Message }) { StatusCode = (int)HttpStatusCode.InternalServerError };
             }
 
 
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         public async Task<IActionResult> PutPost([FromRoute] int id, [FromBody] Post Post)
         {
             try
             {
+                if (id != Post.PostId)
+                {
+                    return BadRequest(ErrorHandeling.MessageBadRequest("شناسه ارسالی با شناسه کاربر یکی نیست"));
+                }
                 await _postRepository.Update(Post);
                 return Ok(Post);
             }
             catch (Exception ex)
             {
 
-                 return new JsonResult(new { message = ex.Message }) { StatusCode = (int)HttpStatusCode.InternalServerError };
+                return new JsonResult(new { message = ex.Message }) { StatusCode = (int)HttpStatusCode.InternalServerError };
             }
 
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeletePost([FromRoute] int id)
         {
             try
             {
-                await _postRepository.Remove(id);
-                return Ok();
+                var result = await _postRepository.Remove(id);
+                if (result == null)
+                {
+                    return NotFound(new { message = "کاربری با این مشخصات پیدا نشد" });
+                }
+                return Ok(new { message = "کاربر حذف شد" });
             }
             catch (Exception ex)
             {
 
-                 return new JsonResult(new { message = ex.Message }) { StatusCode = (int)HttpStatusCode.InternalServerError };
+                return new JsonResult(new { message = ex.Message }) { StatusCode = (int)HttpStatusCode.InternalServerError };
             }
 
         }

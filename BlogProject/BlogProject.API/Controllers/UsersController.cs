@@ -27,11 +27,11 @@ namespace BlogProject.API.Controllers
         /// </summary>
         /// <returns>Users</returns>
         [HttpGet]
-        public async Task<IActionResult> GetUser()
+        public async Task<IActionResult> GetUsers(int? PageNumber = 1, int? PageSize = 20)
         {
             try
             {
-                var Users = await _userRepository.GetUsers();
+                var Users = await _userRepository.GetUsers(PageNumber.Value, PageSize.Value);
                 if (Users.Any())
                 {
                     return Ok(Users);
@@ -69,7 +69,7 @@ namespace BlogProject.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostUser(User User)
+        public async Task<IActionResult> PostUser([FromBody] User User)
         {
             try
             {

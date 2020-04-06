@@ -8,7 +8,7 @@ namespace BlogProject.Core.Services.Interfaces
 {
     public interface IPostRepository
     {
-        IEnumerable<Post> GetPosts();
+        Task<IEnumerable<Post>> GetPosts();
         Task<Post> Add(Post post);
         Task<Post> Find(int id);
         Task<Post> Update(Post post);
