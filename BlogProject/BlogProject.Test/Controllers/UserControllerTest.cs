@@ -23,7 +23,7 @@ namespace BlogProject.Test.Controllers
         {
             BlogProject.API.Controllers.UsersController UsersController = new API.Controllers.UsersController(userRepository.Object);
 
-            var actual = await UsersController.GetUser();
+            var actual = await UsersController.GetUsers();
 
             Assert.NotNull(actual);
         }
@@ -34,7 +34,7 @@ namespace BlogProject.Test.Controllers
         {
             UsersController UsersController = new UsersController(userRepository.Object);
 
-            var actual = await UsersController.GetUser();
+            var actual = await UsersController.GetUsers();
 
             Assert.IsAssignableFrom<IActionResult>(actual);
         }
